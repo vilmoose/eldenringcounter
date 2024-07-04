@@ -63,7 +63,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen_frame = capture_screen('Photos')
+    screen_frame = capture_screen('Photos') #enter name of application; for elden ring its: "ELDEN RING"
     #screen_frame = capture_whole_screen()
     if detect_image(screen_frame):
         counter += 1
