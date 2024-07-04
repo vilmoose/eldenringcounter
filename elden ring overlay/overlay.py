@@ -1,8 +1,12 @@
 import cv2  #pip install opencv-python
+import os
 import numpy as np 
 import pygetwindow as gw #pip install pygetwindow Pillow
 from PIL import ImageGrab
 import pygame #pip install pygame
+
+#set desired location for pygame frame (the counter)
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (1250, 0) #to adjust change (x,y)
 
 # Load the reference image
 reference_image = cv2.imread('deathscreen.png', 0)
@@ -35,7 +39,7 @@ def capture_whole_screen():
 pygame.init()
 
 # Create the overlay window
-overlay_screen = pygame.display.set_mode((200, 200), pygame.NOFRAME)
+overlay_screen = pygame.display.set_mode((200, 100), pygame.NOFRAME)
 
 # Set transparency
 overlay_screen.set_colorkey((0, 0, 0))
@@ -48,7 +52,7 @@ counter = 0
 def update_overlay():
     global counter
     overlay_screen.fill((0, 0, 0, 0))  # Clear the screen with transparency
-    text = font.render(f'Count: {counter}', True, (255, 255, 255))
+    text = font.render(f'Deaths: {counter}', True, (255, 255, 255))
     overlay_screen.blit(text, (50, 50))
     pygame.display.flip()
 
