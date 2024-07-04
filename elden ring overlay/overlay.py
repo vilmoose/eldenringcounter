@@ -26,11 +26,16 @@ def capture_screen(window_title):
     screen_np = np.array(screen)
     return screen_np
 
+def capture_whole_screen():
+    screen = ImageGrab.grab()
+    screen_np = np.array(screen)
+    return screen_np
+
 # Initialize Pygame
 pygame.init()
 
 # Create the overlay window
-overlay_screen = pygame.display.set_mode((50, 100), pygame.NOFRAME)
+overlay_screen = pygame.display.set_mode((200, 200), pygame.NOFRAME)
 
 # Set transparency
 overlay_screen.set_colorkey((0, 0, 0))
@@ -54,7 +59,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    screen_frame = capture_screen('ELDEN RING')
+    screen_frame = capture_screen('Photos')
+    #screen_frame = capture_whole_screen()
     if detect_image(screen_frame):
         counter += 1
 
