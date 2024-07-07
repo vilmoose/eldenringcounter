@@ -4,16 +4,18 @@ import numpy as np
 import pygetwindow as gw  # pip install pygetwindow Pillow
 from PIL import ImageGrab
 import pygame  # pip install pygame
+import ctypes  
+import time
 
 # Set desired location for pygame frame (the counter)
 window_width = 200
 window_height = 100
 x_pos = 1920 - window_width  # Adjust for your screen resolution
 y_pos = 0
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (window_width, window_height)  # To adjust change (x, y)
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (1200, 0)  # To adjust change (x, y)
 
 # Load the reference image
-reference_image = cv2.imread('deathscreen.png', 0)
+reference_image = cv2.imread('deathscreen2.png', 0)
 
 # Initialize the SIFT detector
 sift = cv2.SIFT_create()
@@ -48,7 +50,7 @@ def detect_image(screen_frame):
     
     print(f"{len(good_matches)} good matches found")
     # If there are enough good matches, consider it a detection
-    if len(good_matches) > 2:  # You can adjust this threshold
+    if len(good_matches) > 2:  # You can adjust this threshold, using 1-3 as it seems the best
         return True
     return False
 
@@ -85,19 +87,31 @@ def update_overlay():
     overlay_screen.blit(text, (50, 50))
     pygame.display.flip()
 
+# Keep window of pygame on top of all other applications
+# Get the window handle
+hwnd = pygame.display.get_wm_info()['window']
+
+# # Set the window to stay on top
+def set_window_on_top(hwnd):
+    ctypes.windll.user32.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0004 | 0x0010)  # Flags: SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW
+set_window_on_top(hwnd)
+
 # Main loop
 running = True
 while running:
+    
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
-    screen_frame = capture_screen('Firefox')  # Enter the name of the application; for Elden Ring it's: "ELDEN RING"
+    #screen_frame = capture_screen('ELDEN RING')  # Enter the name of the application; for Elden Ring it's: "ELDEN RING"
+    screen_frame = capture_screen('Firefox')
     #screen_frame = capture_whole_screen()
     if detect_image(screen_frame):
         counter += 1
         print(f"counter: {counter}")
-        
+        #add delay for when it finds it so it doesnt count twice
+        time.sleep(1.5)
     update_overlay()
     pygame.time.delay(1000)  # Delay to reduce CPU usage
 
