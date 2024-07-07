@@ -13,13 +13,14 @@ y_pos = 0
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (window_width, window_height)  # To adjust change (x, y)
 
 # Load the reference image
-reference_image = cv2.imread('deathscreen2.png', 0)
+reference_image = cv2.imread('deathscreen.png', 0)
 
 # Initialize the SIFT detector
 sift = cv2.SIFT_create()
 
 # Find the keypoints and descriptors with SIFT in the reference image
 kp1, des1 = sift.detectAndCompute(reference_image, None)
+print(f"Reference image: {len(kp1)} keypoints found")
 
 # Initialize the BFMatcher with default parameters
 bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=False)
@@ -30,8 +31,10 @@ def detect_image(screen_frame):
     # Find the keypoints and descriptors with SIFT in the screen frame
     kp2, des2 = sift.detectAndCompute(gray_frame, None)
     if des2 is None:
+        print("No descriptors found in frame")
         return False  # No descriptors found in the frame
 
+    print(f"Screen frame: {len(kp2)} kepypoints found")
     # Use BFMatcher to find matches
     matches = bf.knnMatch(des1, des2, k=2)
     
@@ -43,8 +46,9 @@ def detect_image(screen_frame):
             if m.distance < 0.7 * n.distance:
                 good_matches.append(m)
     
+    print(f"{len(good_matches)} good matches found")
     # If there are enough good matches, consider it a detection
-    if len(good_matches) > 1:  # You can adjust this threshold
+    if len(good_matches) > 2:  # You can adjust this threshold
         return True
     return False
 
@@ -88,11 +92,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    #screen_frame = capture_screen('Firefox')  # Enter the name of the application; for Elden Ring it's: "ELDEN RING"
-    screen_frame = capture_whole_screen()
+    screen_frame = capture_screen('Firefox')  # Enter the name of the application; for Elden Ring it's: "ELDEN RING"
+    #screen_frame = capture_whole_screen()
     if detect_image(screen_frame):
         counter += 1
-        print(counter)
+        print(f"counter: {counter}")
         
     update_overlay()
     pygame.time.delay(1000)  # Delay to reduce CPU usage
