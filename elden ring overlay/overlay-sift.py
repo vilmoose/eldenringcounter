@@ -4,8 +4,9 @@ import numpy as np
 import pygetwindow as gw  # pip install pygetwindow Pillow
 from PIL import ImageGrab
 import pygame  # pip install pygame
-import ctypes  
 import time
+import win32gui
+import win32con
 
 # Set desired location for pygame frame (the counter)
 window_width = 200
@@ -15,7 +16,7 @@ y_pos = 0
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (1200, 0)  # To adjust change (x, y)
 
 # Load the reference image
-reference_image = cv2.imread('deathscreen3.png', 0)
+reference_image = cv2.imread('deathscreen.png', 0)
 
 # Initialize the SIFT detector
 sift = cv2.SIFT_create()
@@ -87,13 +88,12 @@ def update_overlay():
     overlay_screen.blit(text, (50, 50))
     pygame.display.flip()
 
-# Keep window of pygame on top of all other applications
 # Get the window handle
 hwnd = pygame.display.get_wm_info()['window']
 
-# # Set the window to stay on top
+# Keep window of pygame on top of all other applications
 def set_window_on_top(hwnd):
-    ctypes.windll.user32.SetWindowPos(hwnd, -1, 0, 0, 0, 0, 0x0001 | 0x0002 | 0x0004 | 0x0010)  # Flags: SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE | SWP_SHOWWINDOW
+    win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0, win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
 set_window_on_top(hwnd)
 
 # Main loop
