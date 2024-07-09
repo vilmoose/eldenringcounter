@@ -15,7 +15,7 @@ y_pos = 0
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (1200, 0)  # To adjust change (x, y)
 
 # Load the reference image
-reference_image = cv2.imread('deathscreen2.png', 0)
+reference_image = cv2.imread('deathscreen3.png', 0)
 
 # Initialize the SIFT detector
 sift = cv2.SIFT_create()
@@ -50,7 +50,7 @@ def detect_image(screen_frame):
     
     print(f"{len(good_matches)} good matches found")
     # If there are enough good matches, consider it a detection
-    if len(good_matches) > 2:  # You can adjust this threshold, using 1-3 as it seems the best
+    if len(good_matches) > 9:  # You can adjust this threshold, using 1-3 as it seems the best
         return True
     return False
 
@@ -105,8 +105,8 @@ while running:
             running = False
 
     #screen_frame = capture_screen('ELDEN RING')  # Enter the name of the application; for Elden Ring it's: "ELDEN RING"
-    screen_frame = capture_screen('Firefox')
-    #screen_frame = capture_whole_screen()
+    ##screen_frame = capture_screen('Firefox')
+    screen_frame = capture_whole_screen()
     if detect_image(screen_frame):
         counter += 1
         print(f"counter: {counter}")
