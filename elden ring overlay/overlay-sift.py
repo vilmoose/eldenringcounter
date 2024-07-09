@@ -16,7 +16,7 @@ y_pos = 0
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (1200, 0)  # To adjust change (x, y)
 
 # Load the reference image
-reference_image = cv2.imread('deathscreen.png', 0)
+reference_image = cv2.imread('deathscreen3.png', 0)
 
 # Initialize the SIFT detector
 sift = cv2.SIFT_create()
@@ -28,6 +28,7 @@ print(f"Reference image: {len(kp1)} keypoints found")
 # Initialize the BFMatcher with default parameters
 bf = cv2.BFMatcher(cv2.NORM_L2, crossCheck=False)
 
+# compares screenshot provided with existing reference image and determines if they are similar
 def detect_image(screen_frame):
     # Convert the screen frame to grayscale
     gray_frame = cv2.cvtColor(screen_frame, cv2.COLOR_BGR2GRAY)
@@ -55,6 +56,7 @@ def detect_image(screen_frame):
         return True
     return False
 
+# Captures a screenshot of application screen
 def capture_screen(window_title):
     game_window = gw.getWindowsWithTitle(window_title)[0]
     bbox = (game_window.left, game_window.top, game_window.right, game_window.bottom)
@@ -62,11 +64,29 @@ def capture_screen(window_title):
     screen_np = np.array(screen)
     return screen_np
 
+# Captures a screenshot of whole screen
 def capture_whole_screen():
     screen = ImageGrab.grab()
     screen_np = np.array(screen)
     return screen_np
 
+# Save # of deaths
+def save_death_counter(counter, filename="death_count.txt"):
+    with open(filename, 'w') as file:
+        file.write(str(counter)) #write counter into file
+        
+# Load # of deaths
+def load_death_counter(filename="death_count.txt"):
+    if os.path.exists(filename):
+        with open(filename, 'r') as file:
+            content = file.read().strip()
+            if content.isdigit():
+                return int(content) #read counter from file
+            else:
+                return 0
+    else:
+        return 0
+    
 # Initialize Pygame
 pygame.init()
 
@@ -79,7 +99,7 @@ overlay_screen.set_colorkey((0, 0, 0))
 # Font for the counter
 font = pygame.font.Font(None, 36)
 
-counter = 0 #update after closing application so correct # of deaths is shown when you start next time
+counter = load_death_counter() #loads the death counter from last time program was closed
 
 def update_overlay():
     global counter
@@ -110,9 +130,11 @@ while running:
     if detect_image(screen_frame):
         counter += 1
         print(f"counter: {counter}")
+        save_death_counter(counter)
         #add delay for when it finds it so it doesnt count twice
         time.sleep(1.5)
     update_overlay()
     pygame.time.delay(1000)  # Delay to reduce CPU usage
 
+save_death_counter(counter)
 pygame.quit()
