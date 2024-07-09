@@ -79,7 +79,7 @@ overlay_screen.set_colorkey((0, 0, 0))
 # Font for the counter
 font = pygame.font.Font(None, 36)
 
-counter = 0
+counter = 0 #update after closing application so correct # of deaths is shown when you start next time
 
 def update_overlay():
     global counter
