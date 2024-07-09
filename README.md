@@ -1,4 +1,4 @@
-This project aims to create a simple overlay for a video game known as Elden Ring (but should work for all FromSoftware games). The program provides a death counter to the user to be able to keep track of how many times the user has died trying to take down enemies. 
+This project aims to create a simple overlay for a video game known as Elden Ring (but should work for all FromSoftware games). The program provides a death counter to the user to be able to keep track of how many times the user has died trying to take down enemies. NOTE: the program does not remember what the death count was when you close it and reopen it, so you must manually adjust the counter (line 82 of overlay-sift.py) to be set at death count before you closed the program the last time (i am trying to incorporate a way to keep track but for now have not added in that functionality)
 
 Requirements: Python3 (3.11.7), Windows 10/11, Various Python Libraries (included inside the requirements.txt file)
 
